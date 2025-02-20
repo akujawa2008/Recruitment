@@ -1,12 +1,10 @@
 package com.recruitment.recruiter;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RecruiterDto {
     private String id;
     private String firstName;
@@ -14,4 +12,9 @@ public class RecruiterDto {
     private Integer maxDailyInterviews;
     private Integer maxWeeklyInterviews;
     private Integer maxMonthlyInterviews;
+    private String calendarId;
+    private String userId;
+
+    public RecruiterDto(String recr1, String john, String doe, int i, int i1, int i2) {
+    }
 }

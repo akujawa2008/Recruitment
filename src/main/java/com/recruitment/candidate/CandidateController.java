@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/candidates")
+
 public class CandidateController {
 
     private final CandidateService candidateService;
+
+    public CandidateController(CandidateService candidateService) {
+        this.candidateService = candidateService;
+    }
 
     @Operation(summary = "Get all candidates")
     @ApiResponse(responseCode = "200", description = "List of candidates returned")

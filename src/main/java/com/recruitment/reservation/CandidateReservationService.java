@@ -5,9 +5,12 @@ import com.recruitment.exceptions.OverlapException;
 import com.recruitment.exceptions.ResourceNotFoundException;
 import com.recruitment.interview.InterviewSlot;
 import com.recruitment.interview.InterviewSlotRepository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import com.recruitment.kafka.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ public class CandidateReservationService {
     private final CandidateRepository candidateRepository;
     private final InterviewSlotRepository slotRepository;
     private final CandidateReservationMapper reservationMapper;
+    private final KafkaProducerService kafkaProducerService;
 
     public CandidateReservation createReservation(CandidateReservationDto dto) {
         InterviewSlot slot = slotRepository.findById(dto.getSlotId())
@@ -35,7 +39,13 @@ public class CandidateReservationService {
         CandidateReservation entity = reservationMapper.toEntity(dto);
         entity.setReservationTime(LocalDateTime.now());
         entity.setStatus("ACTIVE");
-        return reservationRepository.save(entity);
+        CandidateReservation saved = reservationRepository.save(entity);
+
+        String message = String.format("Reservation created: id=%s slot=%s candidate=%s",
+                saved.getId(), saved.getSlotId(), saved.getCandidateId());
+        kafkaProducerService.sendMessage("reservations", saved.getId(), message);
+
+        return saved;
     }
 
     public CandidateReservation updateReservation(String reservationId, CandidateReservationDto dto) {

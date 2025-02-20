@@ -17,7 +17,7 @@ public class GoogleCalendarConfig {
     private String applicationName;
 
     @Bean
-    public com.google.api.services.calendar.Calendar googleCalendarService() throws Exception {
+    public com.google.api.services.calendar.Calendar calendarService() throws Exception {
         InputStream credentialsStream = getClass().getResourceAsStream(keyPath);
         GoogleCredential credential = GoogleCredential.fromStream(credentialsStream)
                 .createScoped(Collections.singletonList("https://www.googleapis.com/auth/calendar"));
